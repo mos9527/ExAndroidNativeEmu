@@ -1,32 +1,23 @@
-Project SEKAI custom streaming CRIWARE HCA Decoder
+Project SEKAI custom streaming CRIWARE HCA Decoder (Windows 64 bit native)
 ---
-# Installation
-**NOTE:** It's recommended to use a virtual environment to install the package.
-- It's recommended to install the package from the source code
-```bash
-    git clone https://github.com/mos9527/sssekai_streaming_hca_decoder
-    cd sssekai_streaming_hca_decoder
-    pip install -e .
+# Build
+In this branch:
+```powershell
+cd Client
+mkdir build
+cd build
+cmake ..
+cmake --build . --config Release
 ```
-- Alternatively, you can install the package directly from the repository
-```bash
-    pip uninstall sssekai_streaming_hca_decoder # If you have installed the package before and have issues
-    pip -U install git+https://github.com/mos9527/sssekai_streaming_hca_decoder
-```
+You will get the `sssekai_streaming_hca_decoder.exe` in the project root's `dist/Release` folder.
+
 # Usage
-**NOTE:** You need to acquire the `libcri_ware_unity` binary from the game (or through other means since it's a part of the **full** CriWare SDK) to decode the HCA segments.
+As always, you'd need to provide `cri_ware_unity.dll` yourself. Place it in the same folder as the executable.
 
-**NOTE:** This repo DOES NOT nor WILL BE able to provide the binary for you. DO NOT submit issues or PRs regarding this matter.
-
-**NOTE:** Currently, binaries from Android (arm64) are supported. Windows (amd64), and Linux (amd64) binaries are also supported through FFI (ctypes, WIP).
-
-- To decode the HCA segments
-```bash
-    python --lib <path to your criware lib> --arch <optional. architecture of your lib. defaults to android-aarch64> -m sssekai_streaming_hca_decoder <input file or directory> <output directory>
+```powershell
+Project SEKAI custom streaming HCA decoder (native win64)
+usage: <input directory (containing *.hca frames> <output .wav file>
+        - the hca frames will be appended to the wav file one by one whilst being lexicographically sorted by their filenames
 ```
-The files will be saved in the output directory with the same name as the input file in WAV format.
 
-# Credits
-- https://github.com/maiyao1988/ExAndroidNativeEmu
-- https://github.com/mos9527/sssekai/blob/main/sssekai/fmt/rla.py
-- [This discussion in the UnityPy discord](https://discord.com/channels/603359898507673630/1275510423772463125)
+The HCA segements will be decoded and merged into a single, large (!) WAV file.
