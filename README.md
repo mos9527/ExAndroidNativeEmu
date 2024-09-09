@@ -15,12 +15,14 @@ Project SEKAI custom streaming CRIWARE HCA Decoder
 ```
 # Usage
 **NOTE:** You need to acquire the `libcri_ware_unity` binary from the game (or through other means since it's a part of the **full** CriWare SDK) to decode the HCA segments.
+
 **NOTE:** This repo DOES NOT nor WILL BE able to provide the binary for you. DO NOT submit issues or PRs regarding this matter.
+
 **NOTE:** Currently, binaries from Android (arm64) are supported. Windows (amd64), and Linux (amd64) binaries are also supported through FFI (ctypes, WIP).
 
 - To decode the HCA segments
 ```bash
-    python --lib <path to your lib> --arch <architecture of your lib> -m sssekai_streaming_hca_decoder <input file or directory> <output directory>
+    python --lib <path to your criware lib> --arch <optional. architecture of your lib. defaults to android-aarch64> -m sssekai_streaming_hca_decoder <input file or directory> <output directory>
 ```
 The files will be saved in the output directory with the same name as the input file in WAV format.
 
