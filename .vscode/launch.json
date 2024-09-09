@@ -15,7 +15,7 @@
                 "--lib",
                 "criware_lib/amd64_cri_ware_unity.dll",
                 "--arch",
-                "native-cffi"
+                "native-ffi"
             ],
             "console": "integratedTerminal",
             "justMyCode": false

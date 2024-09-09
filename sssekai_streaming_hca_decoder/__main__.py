@@ -45,7 +45,7 @@ class runtime_emulated(Emulator):
         self.libcpp = self.c_load_library(os.path.join(vfs_root, "system/lib64/libc++.so"))
 
 class runtime_native:
-    ARCH = 'native-cffi'
+    ARCH = 'native-ffi'
 
     def c_alloc_memory(self, size: int):
         return create_string_buffer(size)

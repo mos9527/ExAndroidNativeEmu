@@ -16,7 +16,7 @@ Project SEKAI custom streaming CRIWARE HCA Decoder
 # Usage
 **NOTE:** You need to acquire the `libcri_ware_unity` binary from the game (or through other means since it's a part of the **full** CriWare SDK) to decode the HCA segments.
 **NOTE:** This repo DOES NOT nor WILL BE able to provide the binary for you. DO NOT submit issues or PRs regarding this matter.
-**NOTE:** Currently, binaries from Android (arm64) are supported. Windows (amd64), and Linux (amd64) binaries are also supported through CFFI (WIP).
+**NOTE:** Currently, binaries from Android (arm64) are supported. Windows (amd64), and Linux (amd64) binaries are also supported through FFI (ctypes, WIP).
 
 - To decode the HCA segments
 ```bash
