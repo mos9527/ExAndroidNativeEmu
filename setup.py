@@ -6,6 +6,9 @@ import setuptools, sssekai_streaming_hca_decoder
 with open("README.md", "r", encoding='utf-8') as fh:
     long_description = fh.read()
 
+with open("requirements.txt", "r", encoding='utf-8') as fh:
+    requirements = fh.read().splitlines()
+
 package_data = []
 root_dir = 'sssekai_streaming_hca_decoder'
 package_data += glob.glob("vfs/**", recursive=True, root_dir=root_dir)
@@ -32,7 +35,7 @@ setuptools.setup(
         "License :: OSI Approved :: Apache Software License",
         "Operating System :: OS Independent",
     ],
-    install_requires=["unicorn==1.0.2","capstone==4.0.1","coloredlogs","tqdm"],
+    install_requires=requirements,
     entry_points={"console_scripts": ["sssekai_streaming_hca_decoder = sssekai_streaming_hca_decoder.__main__:__main__"]},
     package_data={'sssekai_streaming_hca_decoder': package_data},
     python_requires=">=3.6",

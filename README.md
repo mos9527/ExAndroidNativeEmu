@@ -6,7 +6,7 @@ Project SEKAI custom streaming CRIWARE HCA Decoder
 ```bash
     git clone https://github.com/mos9527/sssekai_streaming_hca_decoder
     cd sssekai_streaming_hca_decoder
-    pip install -e .
+    pip install -r requirements.txt
 ```
 - Alternatively, you can install the package directly from the repository
 ```bash
