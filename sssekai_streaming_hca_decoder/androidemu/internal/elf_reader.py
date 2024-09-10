@@ -670,7 +670,7 @@ class ELFReader:
 
     def __write_soinfo64(self, mu, load_base, load_bias, info_base):
         #在虚拟机中构造一个soinfo结构
-        assert len(self.__filename)<128
+        assert len(self.__filename)<128, "path %s too long"%(self.__filename)
         
         #name
         memory_helpers.write_utf8(mu, info_base+0, self.__filename)

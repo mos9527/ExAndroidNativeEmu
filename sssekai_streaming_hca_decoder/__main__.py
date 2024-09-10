@@ -40,6 +40,7 @@ class runtime_emulated(Emulator):
     
     def __init__(self, *a, **kw):
         data_root = os.path.dirname(__file__)
+        data_root = os.path.relpath(data_root, os.getcwd())
         vfs_root = os.path.join(data_root, "vfs")        
         super().__init__(vfs_root=vfs_root, config_path=os.path.join(data_root, 'emu_cfg/default.json'),arch=ARCH_ARM64)
         self.libcpp = self.c_load_library(os.path.join(vfs_root, "system/lib64/libc++.so"))

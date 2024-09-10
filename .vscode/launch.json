@@ -13,9 +13,9 @@
                 "d:\\proseka_reverse\\assets\\streaming_live\\archive\\1st_live_vbs-1_hca",
                 "D:\\proseka_reverse\\criware\\wavs",
                 "--lib",
-                "criware_lib/amd64_cri_ware_unity.dll",
+                "D:\\proseka_reverse\\criware\\libcri_ware_unity.so",
                 "--arch",
-                "native-ffi"
+                "emulated-android-aarch64"
             ],
             "console": "integratedTerminal",
             "justMyCode": false
