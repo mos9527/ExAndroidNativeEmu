@@ -20,6 +20,8 @@ Project SEKAI custom streaming CRIWARE HCA Decoder
 
 **NOTE:** Currently, binaries from Android (arm64) are supported. Windows (amd64), and Linux (amd64) binaries are also supported through FFI (ctypes, WIP).
 
+**NOTE:** If you do happen to have the binary for Windows (amd64), please use the [windows-cpp-native](https://github.com/mos9527/sssekai_streaming_hca_decoder/tree/windows-cpp-native) branch instead.
+
 - To decode the HCA segments
 ```bash
     python -m sssekai_streaming_hca_decoder --lib <path to your criware lib> --arch <optional. architecture of your lib. defaults to android-aarch64>  <input file or directory> <output WAV file>
