@@ -13,8 +13,6 @@ from unicorn.arm_const import *
 from .androidemu.emulator import Emulator
 from .androidemu.const.emu_const import ARCH_ARM64
 
-import numpy
-from scipy.io.wavfile import write as write_wav
 logger = logging.getLogger(__name__)
 
 from tqdm import tqdm
@@ -111,12 +109,8 @@ class libcri_ware_unity:
         processedLength = self.c_read_as_int(self.p_processedLength, 4)
         outputSampleCount = self.c_read_as_int(self.p_outputSampleCount, 4)
         outputBuffer = self.c_read_memory(self.output_buffer, outputSampleCount * 4) # float32
-        outputBuffer = [struct.unpack("<f", outputBuffer[i:i+4])[0] for i in range(0, len(outputBuffer), 4)]
-        swizzledBuffers = [[] for _ in range(self.channelCount)]
-        for ch in range(self.channelCount):
-            swizzledBuffers[ch] = outputBuffer[ch::self.channelCount]
-        return swizzledBuffers
-
+        return outputBuffer
+        
 class libcri_ware_unity_emulated(runtime_emulated, libcri_ware_unity):
     def __init__(self, lib_file : str, channelCount : int, samplingRate : int, bitRate : int):
         runtime_emulated.__init__(self)
@@ -132,7 +126,7 @@ ARCHS = {a.ARCH: a for a in ARCHS}
 def __main__():
     parser = argparse.ArgumentParser(description="Project SEKAI custom streaming CRIWARE HCA Decoder")
     parser.add_argument("input", help="Path to the HCA segment, or a directory containing HCA segments (filenames must end with .hca)")
-    parser.add_argument("output_dir", help="Output directory")
+    parser.add_argument("output", help="Output WAV file")
     parser.add_argument("--lib", help="Path to the CRIWARE library", required=True)
     parser.add_argument("--arch", help="Architecture of the CRIWARE library", choices=ARCHS, default=libcri_ware_unity_emulated.ARCH)
     args = parser.parse_args()
@@ -141,16 +135,21 @@ def __main__():
     if os.path.isdir(args.input):
         files = [os.path.join(args.input, f) for f in os.listdir(args.input) if f.lower().endswith(".hca")]
     else:
-        files = [args.input]        
-    os.makedirs(args.output_dir, exist_ok=True)
+        files = [args.input]      
+    files = sorted(files)
     print('input dir:', args.input)
-    print('output dir:', args.output_dir)
-    for idx, file in tqdm(enumerate(files), total=len(files)):
-        outname = os.path.splitext(os.path.basename(file))[0] + '.wav'        
-        hca_data = open(file, "rb").read()
-        pcm_data = lib.DecodeHcaToInterleavedPcm(hca_data)
-        channels = numpy.array(pcm_data, dtype=numpy.float32)
-        write_wav(os.path.join(args.output_dir, outname), lib.samplingRate, channels.T)
+    print('output file:', args.output)
+    with open(args.output, "wb") as out:
+        out.seek(44)        
+        for idx, file in tqdm(enumerate(files), total=len(files)):      
+            hca_data = open(file, "rb").read()
+            pcm_data = lib.DecodeHcaToInterleavedPcm(hca_data)
+            out.write(pcm_data)
+        data_size = out.tell() - 44
+        out.seek(0);  out.write(b'RIFF$\xd0\xdf\x07WAVEfmt \x10\x00\x00\x00\x03\x00\x01\x00D\xac\x00\x00\x10\xb1\x02\x00\x04\x00 \x00data\x00\xd0\xdf\x07')
+        out.seek(4);  out.write(struct.pack('<I', data_size + 36))
+        out.seek(40); out.write(struct.pack('<I', data_size))
+
     print('all done. going home.')
 if __name__ == "__main__":
     __main__()

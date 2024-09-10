@@ -32,7 +32,7 @@ setuptools.setup(
         "License :: OSI Approved :: Apache Software License",
         "Operating System :: OS Independent",
     ],
-    install_requires=["unicorn==1.0.2","capstone==4.0.1","coloredlogs","numpy","scipy","tqdm"],
+    install_requires=["unicorn==1.0.2","capstone==4.0.1","coloredlogs","tqdm"],
     entry_points={"console_scripts": ["sssekai_streaming_hca_decoder = sssekai_streaming_hca_decoder.__main__:__main__"]},
     package_data={'sssekai_streaming_hca_decoder': package_data},
     python_requires=">=3.6",

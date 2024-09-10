@@ -22,9 +22,9 @@ Project SEKAI custom streaming CRIWARE HCA Decoder
 
 - To decode the HCA segments
 ```bash
-    python --lib <path to your criware lib> --arch <optional. architecture of your lib. defaults to android-aarch64> -m sssekai_streaming_hca_decoder <input file or directory> <output directory>
+    python -m sssekai_streaming_hca_decoder --lib <path to your criware lib> --arch <optional. architecture of your lib. defaults to android-aarch64>  <input file or directory> <output WAV file>
 ```
-The files will be saved in the output directory with the same name as the input file in WAV format.
+The HCA segements will be decoded and merged into a single, very large (depending on the no. of hca segments provided) WAV file.
 
 # Credits
 - https://github.com/maiyao1988/ExAndroidNativeEmu
