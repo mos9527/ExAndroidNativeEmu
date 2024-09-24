@@ -1,4 +1,5 @@
-﻿#include <stdio.h>
+﻿#define _CRT_SECURE_NO_WARNINGS
+#include <stdio.h>
 #include <ctype.h>
 #include <filesystem>
 #include <vector>
@@ -7,7 +8,7 @@
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 #define DECLARE_FP(NAME, RETURN_TYPE, ...) \
-	typedef RETURN_TYPE(*__fastcall p_##NAME)(__VA_ARGS__); \
+	typedef RETURN_TYPE(__fastcall* p_##NAME)(__VA_ARGS__); \
 	p_##NAME NAME;
 #define RUNTIME_LOAD(NAME) NAME = (p_##NAME)GetProcAddress(module, #NAME); ASSERT(NAME, L"Failed to load " L#NAME);
 #define ASSERT(X, MSG) if (!(X)) { MessageBoxW(NULL, MSG, L"Error", MB_ICONERROR); exit(1); }
@@ -77,7 +78,7 @@ struct wav_writer {
 		header.update(fmt, channelCount, sampleRate, bitsPerSample);
 		fseek(fp, sizeof(header), SEEK_SET);
 	}
-	void write_mono(const float* pcm32le, const size_t length) {
+	void write_mono(const float* pcm32le, const int length) {
 		fwrite(pcm32le, sizeof(float), length, fp);
 		num_samples += length;
 	}
@@ -100,9 +101,9 @@ int main(int argc, char** argv)
 	vector<float> pcmBuffer(DIM);
 
 	criware lib(L"cri_ware_unity.dll");
-	(*lib.criHcaDecoderUnity_Initialize)();
-	criware::handle_t handle = (*lib.criHcaDecoderUnity_Create)(1);
-	(*lib.criHcaDecoderUnity_Reset)(handle, 1, 44100, 128000);
+	lib.criHcaDecoderUnity_Initialize();
+	criware::handle_t handle = lib.criHcaDecoderUnity_Create(1);
+	lib.criHcaDecoderUnity_Reset(handle, 1, 44100, 128000);
 	
 	FILE* wavfile = fopen(argv[2], "wb");
 	ASSERT(wavfile, L"Cannot open output file for writing!");
@@ -121,7 +122,7 @@ int main(int argc, char** argv)
 		size_t dt = ts - p_stat[0].t;
 		if (dt >= every || n == 0) {			
 			size_t dn = p_stat[0].n - p_stat[1].n;
-			float r = dn / (dt / 1000.0);
+			float r = dn / (dt / 1000.0f);
 			wprintf(L"\rprocessing %05lld/%05lld %.2f frames/s", p_stat[0].n, entries.size(), r);
 			p_stat[0].t = ts, p_stat[1] = p_stat[0];
 		}
@@ -133,10 +134,11 @@ int main(int argc, char** argv)
 		hcaBuffer.resize(fread(hcaBuffer.data(), 1, DIM, fp));
 		fclose(fp);
 		uint32_t processedBytes, outputSamples;
-		(*lib.criHcaDecoderUnity_DecodeHcaToInterleavedPcm)
-			(handle, hcaBuffer.data(), 0, hcaBuffer.size(), pcmBuffer.data(), &processedBytes, &outputSamples);
+		lib.criHcaDecoderUnity_DecodeHcaToInterleavedPcm(
+			handle, hcaBuffer.data(), 0, (int)hcaBuffer.size(), pcmBuffer.data(), &processedBytes, &outputSamples
+		);
 		pcmBuffer.resize(outputSamples);
-		wav.write_mono(pcmBuffer.data(), pcmBuffer.size());	
+		wav.write_mono(pcmBuffer.data(), (int)pcmBuffer.size());
 		update_progress(1);
 	}
 	update_progress(0);
