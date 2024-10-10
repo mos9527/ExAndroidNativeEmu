@@ -2,6 +2,7 @@ Project SEKAI custom streaming CRIWARE HCA Decoder
 ---
 # Installation
 **NOTE:** It's recommended to use a virtual environment to install the package.
+**NOTE:** **ONLY** Python **3.11** is supported.
 - It's recommended to install the package from the source code
 ```bash
     git clone https://github.com/mos9527/sssekai_streaming_hca_decoder

@@ -10,8 +10,8 @@
             "request": "launch",
             "module": "sssekai_streaming_hca_decoder",
             "args": [
-                "d:\\proseka_reverse\\assets\\streaming_live\\archive\\1st_live_vbs-1_hca",
-                "D:\\proseka_reverse\\assets\\streaming_live\\archive\\1st_live_vbs-1_hca.wav",
+                "D:\\proseka_reverse\\sse_packet_importer\\4270_hca",
+                "D:\\proseka_reverse\\sse_packet_importer\\4270.wav",
                 "--lib",
                 "D:\\proseka_reverse\\criware\\libcri_ware_unity.so",
                 "--arch",
