@@ -11,7 +11,14 @@
 	typedef RETURN_TYPE(__fastcall* p_##NAME)(__VA_ARGS__); \
 	p_##NAME NAME;
 #define RUNTIME_LOAD(NAME) NAME = (p_##NAME)GetProcAddress(module, #NAME); ASSERT(NAME, L"Failed to load " L#NAME);
-#define ASSERT(X, MSG) if (!(X)) { MessageBoxW(NULL, MSG, L"Error", MB_ICONERROR); exit(1); }
+static wchar_t _assert_msg_buffer[1024];
+static void _assert(const wchar_t* cond_s, const wchar_t* fmt = L"", auto ...args) {
+	int p = swprintf(_assert_msg_buffer, L"Assertion failed: %ls\n", cond_s);
+	swprintf(_assert_msg_buffer + p, fmt, args...);
+	MessageBoxW(NULL, _assert_msg_buffer, L"Error", MB_ICONERROR); 
+	exit(1);	
+}
+#define ASSERT(cond, ...) if (!cond) _assert(L#cond, __VA_ARGS__);
 const wchar_t* HELP_STRING = L"Project SEKAI custom streaming HCA decoder (native win64)\n"
 "usage: <input directory (containing *.hca frames)> <output .wav file>\n"
 "	- the hca frames will be appended to the wav file one by one whilst being lexicographically sorted by their filenames\n";
@@ -90,6 +97,7 @@ struct wav_writer {
 };
 
 #define DIM (size_t)(1e5)
+#define FRAME_SIZE_LIMIT 16384
 using namespace std;
 int main(int argc, char** argv)
 {
@@ -132,6 +140,7 @@ int main(int argc, char** argv)
 	for (const auto& entry : entries) {
 		FILE* fp = fopen(entry.c_str(), "rb");
 		hcaBuffer.resize(fread(hcaBuffer.data(), 1, DIM, fp));
+		ASSERT(hcaBuffer.size() < FRAME_SIZE_LIMIT, L"File=%hs\nFrame size exceeds limit (read=%ld, max=%ld)", entry.c_str(), hcaBuffer.size(), FRAME_SIZE_LIMIT);
 		fclose(fp);
 		uint32_t processedBytes, outputSamples;
 		lib.criHcaDecoderUnity_DecodeHcaToInterleavedPcm(
