@@ -18,7 +18,7 @@ static void _assert(const wchar_t* cond_s, const wchar_t* fmt = L"", auto ...arg
 	MessageBoxW(NULL, _assert_msg_buffer, L"Error", MB_ICONERROR); 
 	exit(1);	
 }
-#define ASSERT(cond, ...) if (!cond) _assert(L#cond, __VA_ARGS__);
+#define ASSERT(cond, ...) if (!(cond)) _assert(L#cond, __VA_ARGS__);
 const wchar_t* HELP_STRING = L"Project SEKAI custom streaming HCA decoder (native win64)\n"
 "usage: <input directory (containing *.hca frames)> <output .wav file>\n"
 "	- the hca frames will be appended to the wav file one by one whilst being lexicographically sorted by their filenames\n";
@@ -97,7 +97,7 @@ struct wav_writer {
 };
 
 #define DIM (size_t)(1e5)
-#define FRAME_SIZE_LIMIT 16384
+#define FRAME_SIZE_LIMIT 32768
 using namespace std;
 int main(int argc, char** argv)
 {
