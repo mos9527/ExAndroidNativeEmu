@@ -223,7 +223,7 @@ def __main__():
             hca_data = open(file, "rb").read()
             assert (
                 len(hca_data) < 32768
-            ), "file (%s) size too big (size=%d, max 16384)" % (file, len(hca_data))
+            ), "file (%s) size too big (size=%d, max 32768)" % (file, len(hca_data))
             pcm_data = lib.DecodeHcaToInterleavedPcm(hca_data)
             out.write(pcm_data)
         data_size = out.tell() - 44
